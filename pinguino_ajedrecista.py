@@ -201,31 +201,54 @@ if __name__ == "__main__":
     print("Introduce tus jugadas en notación SAN (ej. e4, Nf3, Bxe5).")
     print(board)
     
-    # Bucle principal del juego
-    while not board.is_game_over():
-        if board.turn == chess.WHITE:  # Turno del jugador
-            try:
-                # Pedir jugada al usuario
-                move_san = input("Tu jugada (blancas): ")
-                # El método `parse_san` convierte la notación a un objeto Move
-                move = board.parse_san(move_san)
-                # Ejecuta el movimiento en el tablero
-                board.push(move)
-            except ValueError:
-                print("¡Jugada inválida! Inténtalo de nuevo.")
-                continue
-        else:  # Turno del motor (negras)
-            print("\nTurno de Pingüino Ajedrecista (negras)...")
-            # El motor busca su mejor jugada
-            engine_move = find_best_move(board)
-            print(f"Pingüino Ajedrecista juega: {board.san(engine_move)}")
-            # Ejecuta la jugada del motor
-            board.push(engine_move)
-            
-        # Imprimir el tablero después de cada jugada
-        print("\n" + str(board))
-        print("-----------------------------------------")
+    import sys
 
-    # Mensaje de fin de partida
-    print("\n¡Fin del juego!")
-    print("Resultado: " + board.result())
+    # Bucle principal del juego
+    try:
+        while not board.is_game_over():
+            if board.turn == chess.WHITE:  # Turno del jugador
+                try:
+                    # Pedir jugada al usuario
+                    move_san = input("Tu jugada (blancas): ").strip()
+
+                    # Comandos de utilidad
+                    if move_san.lower() in ['salir', 'quit']:
+                        print("\nSaliendo del juego. ¡Hasta pronto!")
+                        sys.exit(0)
+                    elif move_san.lower() == 'deshacer':
+                        if len(board.move_stack) >= 2:
+                            board.pop() # Deshace el movimiento del motor (negras)
+                            board.pop() # Deshace tu movimiento (blancas)
+                            print("\nSe han deshecho los dos últimos movimientos.")
+                            print("\n" + str(board))
+                            print("-----------------------------------------")
+                        else:
+                            print("\nNo hay suficientes movimientos para deshacer.")
+                        continue
+
+                    # El método `parse_san` convierte la notación a un objeto Move
+                    move = board.parse_san(move_san)
+                    # Ejecuta el movimiento en el tablero
+                    board.push(move)
+                except ValueError:
+                    print("¡Jugada o comando inválido! Inténtalo de nuevo.")
+                    continue
+            else:  # Turno del motor (negras)
+                print("\nTurno de Pingüino Ajedrecista (negras)...")
+                # El motor busca su mejor jugada
+                engine_move = find_best_move(board)
+                print(f"Pingüino Ajedrecista juega: {board.san(engine_move)}")
+                # Ejecuta la jugada del motor
+                board.push(engine_move)
+
+            # Imprimir el tablero después de cada jugada
+            print("\n" + str(board))
+            print("-----------------------------------------")
+
+        # Mensaje de fin de partida
+        print("\n¡Fin del juego!")
+        print("Resultado: " + board.result())
+
+    except (KeyboardInterrupt, EOFError):
+        print("\n\nJuego interrumpido. ¡Hasta pronto!")
+        sys.exit(0)

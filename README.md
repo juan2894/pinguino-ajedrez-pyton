@@ -45,6 +45,13 @@ Cuando sea tu turno, deberás introducir tu jugada en **Notación Algebraica Est
 
 El tablero se imprimirá en la terminal después de cada movimiento, mostrando el estado actual de la partida.
 
+### Comandos de Utilidad
+
+Durante tu turno, en lugar de una jugada, puedes usar los siguientes comandos especiales:
+- `salir` o `quit`: Cierra el juego inmediatamente.
+- `deshacer`: Revierte tu última jugada y la respuesta del motor, permitiéndote intentar un movimiento distinto.
+- También puedes usar `Ctrl+C` o `Ctrl+D` en la terminal para salir limpiamente del juego en cualquier momento.
+
 ## 🧠 Lógica Interna (Evaluación de Capturas)
 
 La función `evaluate_capture` es el corazón de la toma de decisiones secundarias del motor. Asigna una puntuación a cada movimiento de captura basándose en:
