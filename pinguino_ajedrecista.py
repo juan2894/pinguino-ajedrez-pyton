@@ -2,21 +2,21 @@
 
 """
 ==============================================================================
-                            PINGÜINO MÉDICO (MOTOR DE AJEDREZ)
+                            PINGÜINO AJEDRECISTA (MOTOR DE AJEDREZ)
 ==============================================================================
 Descripción:
-Este programa es "Pingüino Médico", un motor de ajedrez básico que utiliza la
-biblioteca 'python-chess'. Pingüino Médico decide su próxima jugada basándose en
+Este programa es "Pingüino Ajedrecista", un motor de ajedrez básico que utiliza la
+biblioteca 'python-chess'. Pingüino Ajedrecista decide su próxima jugada basándose en
 una jerarquía de reglas predefinidas:
 1.  Si puede dar jaque mate, lo hace.
 2.  Si no, busca la mejor captura posible según un sistema de puntuación.
 3.  Si no hay capturas, realiza un movimiento legal aleatorio.
 
-Autor: Desarrollado bajo la solicitud del usuario para el proyecto Pingüino Médico.
+Autor: Desarrollado bajo la solicitud del usuario para el proyecto Pingüino Ajedrecista.
 Fecha: 2025-09-16
 Uso: Ejecutar el script en una terminal. El programa permitirá al usuario 
      (jugando con las blancas) introducir jugadas en notación SAN (ej. e4, Nf3).
-     Pingüino Médico responderá con su jugada para las negras.
+     Pingüino Ajedrecista responderá con su jugada para las negras.
 ==============================================================================
 """
 
@@ -154,7 +154,7 @@ def find_best_move(board):
         temp_board = board.copy()
         temp_board.push(move)
         if temp_board.is_checkmate():
-            print("Pingüino Médico: ¡Encontré un jaque mate!")
+            print("Pingüino Ajedrecista: ¡Encontré un jaque mate!")
             return move
 
     # --- PRIORIDAD 2: (No implementada explícitamente, ver nota) ---
@@ -177,12 +177,12 @@ def find_best_move(board):
                 best_capture = move
         
         if best_capture:
-            print(f"Pingüino Médico: Mejor captura encontrada: {board.san(best_capture)} con puntaje: {max_score}")
+            print(f"Pingüino Ajedrecista: Mejor captura encontrada: {board.san(best_capture)} con puntaje: {max_score}")
             return best_capture
 
     # --- SI NO HAY PRIORIDADES, JUGADA ALEATORIA ---
     # Si no se encontró un mate ni una captura, se elige un movimiento legal al azar.
-    print("Pingüino Médico: No hay mates ni capturas. Realizando un movimiento aleatorio.")
+    print("Pingüino Ajedrecista: No hay mates ni capturas. Realizando un movimiento aleatorio.")
     return random.choice(legal_moves)
 
 
@@ -195,7 +195,7 @@ if __name__ == "__main__":
     board = chess.Board()
     
     print("=========================================")
-    print("   Bienvenido a Pingüino Médico (Ajedrez)")
+    print("   Bienvenido a Pingüino Ajedrecista (Ajedrez)")
     print("=========================================")
     print("Tú juegas con las piezas blancas.")
     print("Introduce tus jugadas en notación SAN (ej. e4, Nf3, Bxe5).")
@@ -215,10 +215,10 @@ if __name__ == "__main__":
                 print("¡Jugada inválida! Inténtalo de nuevo.")
                 continue
         else:  # Turno del motor (negras)
-            print("\nTurno de Pingüino Médico (negras)...")
+            print("\nTurno de Pingüino Ajedrecista (negras)...")
             # El motor busca su mejor jugada
             engine_move = find_best_move(board)
-            print(f"Pingüino Médico juega: {board.san(engine_move)}")
+            print(f"Pingüino Ajedrecista juega: {board.san(engine_move)}")
             # Ejecuta la jugada del motor
             board.push(engine_move)
             
