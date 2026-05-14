@@ -2,21 +2,21 @@
 
 """
 ==============================================================================
-                            MOTOR DE AJEDREZ SIMPLE
+                            PINGÜINO AJEDRECISTA (MOTOR DE AJEDREZ)
 ==============================================================================
 Descripción:
-Este programa es un motor de ajedrez básico que utiliza la biblioteca 
-'python-chess'. El motor decide su próxima jugada basándose en una jerarquía 
-de reglas predefinidas:
+Este programa es "Pingüino Ajedrecista", un motor de ajedrez básico que utiliza la
+biblioteca 'python-chess'. Pingüino Ajedrecista decide su próxima jugada basándose en
+una jerarquía de reglas predefinidas:
 1.  Si puede dar jaque mate, lo hace.
 2.  Si no, busca la mejor captura posible según un sistema de puntuación.
 3.  Si no hay capturas, realiza un movimiento legal aleatorio.
 
-Autor: Inspirado en la solicitud del usuario para el proyecto Pingüino Médico.
+Autor: Desarrollado bajo la solicitud del usuario para el proyecto Pingüino Ajedrecista.
 Fecha: 2025-09-16
 Uso: Ejecutar el script en una terminal. El programa permitirá al usuario 
      (jugando con las blancas) introducir jugadas en notación SAN (ej. e4, Nf3).
-     El motor responderá con su jugada para las negras.
+     Pingüino Ajedrecista responderá con su jugada para las negras.
 ==============================================================================
 """
 
@@ -154,7 +154,7 @@ def find_best_move(board):
         temp_board = board.copy()
         temp_board.push(move)
         if temp_board.is_checkmate():
-            print("Motor: ¡Encontré un jaque mate!")
+            print("Pingüino Ajedrecista: ¡Encontré un jaque mate!")
             return move
 
     # --- PRIORIDAD 2: (No implementada explícitamente, ver nota) ---
@@ -177,12 +177,12 @@ def find_best_move(board):
                 best_capture = move
         
         if best_capture:
-            print(f"Motor: Mejor captura encontrada: {board.san(best_capture)} con puntaje: {max_score}")
+            print(f"Pingüino Ajedrecista: Mejor captura encontrada: {board.san(best_capture)} con puntaje: {max_score}")
             return best_capture
 
     # --- SI NO HAY PRIORIDADES, JUGADA ALEATORIA ---
     # Si no se encontró un mate ni una captura, se elige un movimiento legal al azar.
-    print("Motor: No hay mates ni capturas. Realizando un movimiento aleatorio.")
+    print("Pingüino Ajedrecista: No hay mates ni capturas. Realizando un movimiento aleatorio.")
     return random.choice(legal_moves)
 
 
@@ -195,37 +195,60 @@ if __name__ == "__main__":
     board = chess.Board()
     
     print("=========================================")
-    print("   Bienvenido al Motor de Ajedrez Básico")
+    print("   Bienvenido a Pingüino Ajedrecista (Ajedrez)")
     print("=========================================")
     print("Tú juegas con las piezas blancas.")
     print("Introduce tus jugadas en notación SAN (ej. e4, Nf3, Bxe5).")
     print(board)
     
-    # Bucle principal del juego
-    while not board.is_game_over():
-        if board.turn == chess.WHITE:  # Turno del jugador
-            try:
-                # Pedir jugada al usuario
-                move_san = input("Tu jugada (blancas): ")
-                # El método `parse_san` convierte la notación a un objeto Move
-                move = board.parse_san(move_san)
-                # Ejecuta el movimiento en el tablero
-                board.push(move)
-            except ValueError:
-                print("¡Jugada inválida! Inténtalo de nuevo.")
-                continue
-        else:  # Turno del motor (negras)
-            print("\nTurno del motor (negras)...")
-            # El motor busca su mejor jugada
-            engine_move = find_best_move(board)
-            print(f"El motor juega: {board.san(engine_move)}")
-            # Ejecuta la jugada del motor
-            board.push(engine_move)
-            
-        # Imprimir el tablero después de cada jugada
-        print("\n" + str(board))
-        print("-----------------------------------------")
+    import sys
 
-    # Mensaje de fin de partida
-    print("\n¡Fin del juego!")
-    print("Resultado: " + board.result())
+    # Bucle principal del juego
+    try:
+        while not board.is_game_over():
+            if board.turn == chess.WHITE:  # Turno del jugador
+                try:
+                    # Pedir jugada al usuario
+                    move_san = input("Tu jugada (blancas): ").strip()
+
+                    # Comandos de utilidad
+                    if move_san.lower() in ['salir', 'quit']:
+                        print("\nSaliendo del juego. ¡Hasta pronto!")
+                        sys.exit(0)
+                    elif move_san.lower() == 'deshacer':
+                        if len(board.move_stack) >= 2:
+                            board.pop() # Deshace el movimiento del motor (negras)
+                            board.pop() # Deshace tu movimiento (blancas)
+                            print("\nSe han deshecho los dos últimos movimientos.")
+                            print("\n" + str(board))
+                            print("-----------------------------------------")
+                        else:
+                            print("\nNo hay suficientes movimientos para deshacer.")
+                        continue
+
+                    # El método `parse_san` convierte la notación a un objeto Move
+                    move = board.parse_san(move_san)
+                    # Ejecuta el movimiento en el tablero
+                    board.push(move)
+                except ValueError:
+                    print("¡Jugada o comando inválido! Inténtalo de nuevo.")
+                    continue
+            else:  # Turno del motor (negras)
+                print("\nTurno de Pingüino Ajedrecista (negras)...")
+                # El motor busca su mejor jugada
+                engine_move = find_best_move(board)
+                print(f"Pingüino Ajedrecista juega: {board.san(engine_move)}")
+                # Ejecuta la jugada del motor
+                board.push(engine_move)
+
+            # Imprimir el tablero después de cada jugada
+            print("\n" + str(board))
+            print("-----------------------------------------")
+
+        # Mensaje de fin de partida
+        print("\n¡Fin del juego!")
+        print("Resultado: " + board.result())
+
+    except (KeyboardInterrupt, EOFError):
+        print("\n\nJuego interrumpido. ¡Hasta pronto!")
+        sys.exit(0)
